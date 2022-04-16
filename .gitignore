@@ -1,5 +1,2 @@
-*
-!.gitignore
-!Cargo.toml
-!src
-!src/main.rs
+**/Cargo.lock
+**/target
