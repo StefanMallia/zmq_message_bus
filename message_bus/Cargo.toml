@@ -1,5 +1,5 @@
 [package]
-name = "zeromq_rust_experiments"
+name = "zmq_message_bus"
 version = "0.1.0"
 authors = ["StefanMallia <5004438+StefanMallia@users.noreply.github.com>"]
 edition = "2018"
