@@ -1,62 +1,65 @@
 use std::sync::{Arc};
 use futures::lock::Mutex;
+use async_trait::async_trait;
 
-pub struct MessageBusClient<T>
+#[async_trait]
+trait MessageBusClient
+{
+    async fn connect(configurations: &config_loader::ConfigLoader);
+
+    async fn send_request(&self, destination: &str, data: &str) -> Result<String, String>;
+
+    async fn publish(&self, channel: &str, message: & str);
+
+    async fn subscribe_channel(&self, channel: &str);
+}
+
+pub struct ZmqMessageBusClient<T>
 where T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static
 {
     publisher: Arc<Mutex<publisher::Publisher>>,
-    subscriber: Arc<Mutex<subscriber::Subscriber>>,
+    _subscriber: Arc<Mutex<subscriber::Subscriber>>,
     requester: Arc<Mutex<req_client::RequestClient>>,
-    replier: Arc<rep_server::ReplyServer<T>>
+    _replier: Arc<rep_server::ReplyServer<T>>
 }
 
-impl <T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> MessageBusClient<T>
+impl <T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> ZmqMessageBusClient<T>
 {
-    pub async fn connect(identity: &str,
-                         subscriber_channel: &str,
-                         message_bus_address_for_pubs: &str,
-                         message_bus_address_for_subs: &str,
-                         message_bus_address_for_router: &str,
-                         message_processor: T) -> MessageBusClient<T>
+    pub async fn connect(configurations: &config_loader::ConfigLoader,
+                         message_processor: T) -> ZmqMessageBusClient<T>
     {
-        let publisher = Arc::new(Mutex::new(publisher::Publisher::new(&message_bus_address_for_pubs, false)));
-        let subscriber = Arc::new(Mutex::new(subscriber::Subscriber::new(subscriber_channel, message_bus_address_for_subs, false)));
-        let requester = Arc::new(Mutex::new(req_client::RequestClient::new(identity, message_bus_address_for_router)));
-        let replier = Arc::new(rep_server::ReplyServer::new(identity, message_processor, message_bus_address_for_router));
-        
-        //replier.lock().await.receive_requests().await;
+        let identity = configurations.get_value("zmq_message_bus.identity").unwrap();
+        let channels_strings = configurations.get_array("zmq_message_bus.subscription_channels").unwrap();
+        let channels = channels_strings.iter().map(|x| x.as_str()).collect();
+        let message_bus_address_for_pubs = configurations.get_value("zmq_message_bus.address_for_pubs").unwrap();
+        let message_bus_address_for_subs = configurations.get_value("zmq_message_bus.address_for_subs").unwrap();
+        let message_bus_address_for_router = configurations.get_value("zmq_message_bus.address_for_router").unwrap();
 
+        let publisher = Arc::new(Mutex::new(publisher::Publisher::new(&message_bus_address_for_pubs, false)));
+        let _subscriber = Arc::new(Mutex::new(subscriber::Subscriber::new(channels, &message_bus_address_for_subs, false)));
+        let requester = Arc::new(Mutex::new(req_client::RequestClient::new(&identity, &message_bus_address_for_router)));
+        let _replier = Arc::new(rep_server::ReplyServer::new(&identity, message_processor, &message_bus_address_for_router));
+        
         tokio::spawn(
         {
-            let rep = Arc::clone(&replier);
-        
-       
+            let rep = Arc::clone(&_replier);
             async move
             {
                 rep.receive_requests().await;
-
             }
-        }
-            
-        );
+        });
 
         
         tokio::spawn(
         {
-            let sub = Arc::clone(&subscriber);
-        
-       
+            let sub = Arc::clone(&_subscriber);
             async move
             {
                 sub.lock().await.receive().await;
             }
-        }
-            
-        );
+        });
 
-
-
-        MessageBusClient{publisher, subscriber, requester, replier}       
+        ZmqMessageBusClient{publisher, _subscriber, requester, _replier}       
     }
 
     pub async fn send_request(&self, destination: &str, data: &str) -> Result<String, String>
@@ -68,14 +71,4 @@ impl <T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> Messag
     {
         self.publisher.lock().await.send_string(channel, message);
     }
-    /*
-
-    pub async fn listen(&self)
-    {
-
-        let replier_listen_future = self.replier.receive_requests();
-        let subscriber_listen_future = self.subscriber.receive();
-
-        tokio::join!(subscriber_listen_future, replier_listen_future);
-    }*/
 }
