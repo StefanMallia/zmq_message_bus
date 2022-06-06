@@ -18,3 +18,4 @@ rep_server = { version = "0.1.0", git="https://github.com/StefanMallia/zmq_req_r
 #rep_server = {version = "0.1.0", path="/home/stefan/Base/Sync/Code/zmq_req_rep_router/server"}
 req_client = { version = "0.1.0", git="https://github.com/StefanMallia/zmq_req_rep_router", branch="main" }
 futures = "0.3"
+async-trait = "0.1.53"
