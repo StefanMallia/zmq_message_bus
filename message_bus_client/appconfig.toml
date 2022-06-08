@@ -1,3 +1,0 @@
-message_bus_address_for_publishers="tcp://127.0.0.1:13031"
-message_bus_address_for_subscribers="tcp://127.0.0.1:13032"
-message_bus_address_for_router="tcp://127.0.0.1:13033"
