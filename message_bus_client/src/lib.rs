@@ -46,6 +46,8 @@ impl <T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> ZmqMes
         let message_bus_address_for_router
             = configurations.get_value("zmq_message_bus.address_for_router").unwrap();
 
+        // in the identity, it is necessary to distinguish between the requester
+        // and the replier since these are separate connections
         let publisher = Arc::new(Mutex::new(publisher::Publisher::new(
                     &message_bus_address_for_pubs, false)));
         let _subscriber = Arc::new(subscriber::Subscriber::new(
