@@ -1,10 +1,10 @@
 use std::sync::{Arc};
 use futures::lock::Mutex;
 use async_trait::async_trait;
-pub use rep_server::ProcessRequest;
+pub use rep_server::ProcessRequest as ProcessRequest;
 
 #[async_trait]
-trait MessageBusClient
+pub trait MessageBusClient
 {
     async fn connect(configurations: &config_loader::ConfigLoader);
 
