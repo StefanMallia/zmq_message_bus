@@ -1,5 +1,4 @@
-use std::sync::{Arc};
-use futures::lock::Mutex;
+use std::sync::{Arc, Mutex};
 use async_trait::async_trait;
 pub use rep_server::ProcessRequest as ProcessRequest;
 
@@ -86,11 +85,18 @@ impl <T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> ZmqMes
 
     pub async fn send_request(&self, destination: &str, data: &str) -> Result<String, String>
     {
-        self.requester.lock().await.send_request(&format!("{}{}", destination, "_replier"), data).await
+        self.requester.lock().unwrap().send_request(&format!("{}{}", destination, "_replier"), data).await
     }
 
-    pub async fn publish(&self, channel: &str, message: &str)
+    pub async fn publish(&self, channel: &'static str, message: &'static str)
     {
-        self.publisher.lock().await.send_string(channel, message);
+        tokio::spawn(
+        {
+            let publisher = Arc::clone(&self.publisher);
+            async move
+            {
+                publisher.lock().unwrap().send_string(channel, message);
+            }
+        }); 
     }
 }
