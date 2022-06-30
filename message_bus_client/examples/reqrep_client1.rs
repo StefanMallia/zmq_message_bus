@@ -1,4 +1,5 @@
 use zmq_message_bus_client::ZmqMessageBusClient;
+use zmq_message_bus_client::MessageBusClient;
 use zmq_message_bus_client::ProcessRequest;
 
 pub struct MessageProcessor {}
@@ -41,14 +42,11 @@ async fn send_message_loop(message_bus_client: &ZmqMessageBusClient<MessageProce
     loop
     {   
         increment = increment + 1;
-        //let mut line = String::new();
-        //println!("Enter text to send:\n");
 
-        //std::io::stdin().read_line(&mut line).unwrap();
-        let message = format!("Hello from client1 {}", increment);
+        let message = format!("Message from client1 {}", increment);
 
         let reply = message_bus_client.send_request("client2", &message).await.unwrap();
-        println!("{}", reply);
-        std::thread::sleep(std::time::Duration::from_micros(1));
+        println!("Reply from client 2: {}", reply);
+        std::thread::sleep(std::time::Duration::from_secs(1));
     }
 }
