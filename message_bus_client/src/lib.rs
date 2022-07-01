@@ -47,9 +47,9 @@ impl<T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> ZmqMess
         // in the identity, it is necessary to distinguish between the requester
         // and the replier since these are separate connections
         let publisher = Arc::new(Mutex::new(publisher::Publisher::new(
-                    &message_bus_address_for_subs, false)));
+                    &message_bus_address_for_pubs, false)));
         let _subscriber = Arc::new(subscriber::Subscriber::new(
-                    channels, &message_bus_address_for_pubs, false));
+                    channels, &message_bus_address_for_subs, false));
         let requester = Arc::new(Mutex::new(req_client::RequestClient::new(
                     &format!("{}{}", &identity, "_requester"),
                              &message_bus_address_for_router)));

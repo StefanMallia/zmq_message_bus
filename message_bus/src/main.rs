@@ -6,8 +6,8 @@ pub async fn main()
     let message_bus_address_for_subs = config_loader.get_string("message_bus_address_for_subscribers").unwrap();
     let message_bus_req_rep_router = config_loader.get_string("message_bus_address_for_router").unwrap();
 
-    let publisher = publisher::Publisher::new(message_bus_address_for_pubs.as_str(), true);
-    let subscriber = subscriber::Subscriber::new(vec![""], message_bus_address_for_subs.as_str(), true);
+    let publisher = publisher::Publisher::new(message_bus_address_for_subs.as_str(), true);
+    let subscriber = subscriber::Subscriber::new(vec![""], message_bus_address_for_pubs.as_str(), true);
 
     let message_bus = 
         tokio::spawn(async move
