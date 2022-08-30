@@ -10,6 +10,8 @@ pub trait MessageBusClient
 
     async fn publish(&self, channel: String, message: String);
 
+    async fn publish_bytes(&self, channel: String, message: Vec<u8>);
+
     async fn subscribe_channel(&self, channel: &str);
 }
 
@@ -99,6 +101,18 @@ impl<T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> Message
             async move
             {
                 publisher.lock().await.send_string(&channel, &message);
+            }
+        }); 
+    }
+
+    async fn publish_bytes(&self, channel: String, message: Vec<u8>)
+    {
+        tokio::spawn(
+        {
+            let publisher = Arc::clone(&self.publisher);
+            async move
+            {
+                publisher.lock().await.send(&channel, &message);
             }
         }); 
     }
