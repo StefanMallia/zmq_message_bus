@@ -11,7 +11,7 @@ zmq = "0.9"
 tokio = { version = "1", features = ["full"] }
 chrono = "0.4.19"
 config_loader = {version = "0.1.0", git="https://github.com/StefanMallia/config_loader", branch="main"}
-publisher = {version = "0.1.0", git="https://github.com/StefanMallia/zmq_pub_sub", branch="main"}
+publisher = {version = "0.2.0", git="https://github.com/StefanMallia/zmq_pub_sub", branch="main"}
 subscriber = {version = "0.1.0", git="https://github.com/StefanMallia/zmq_pub_sub", branch="main"}
 zmq_message_router = {version = "0.1.0", git="https://github.com/StefanMallia/zmq_req_rep_router", branch="main"}
 rep_server = { version = "0.1.0", git="https://github.com/StefanMallia/zmq_req_rep_router", branch="main" }
