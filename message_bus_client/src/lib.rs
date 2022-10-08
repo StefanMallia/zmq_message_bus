@@ -112,7 +112,7 @@ impl<T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> Message
             let publisher = Arc::clone(&self.publisher);
             async move
             {
-                publisher.lock().await.send(&channel, &message);
+                publisher.lock().await.send_bytes(&channel, &message);
             }
         }); 
     }
