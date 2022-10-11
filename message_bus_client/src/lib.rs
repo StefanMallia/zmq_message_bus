@@ -15,9 +15,10 @@ pub trait MessageBusClient
     async fn subscribe_channel(&self, channel: &str);
 }
 
+#[async_trait]
 pub trait ProcessPublisherMessage
 {
-    fn process_message(&self, message: &str);
+    async fn process_message(&self, message: &str);
 }
 
 pub struct ZmqMessageBusClient<T>
@@ -76,7 +77,7 @@ impl<T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> ZmqMess
             {
                 loop
                 {
-                    published_message_processor.process_message(&sub.receive().await);
+                    published_message_processor.process_message(&sub.receive().await).await;
                 }
             }
         });
