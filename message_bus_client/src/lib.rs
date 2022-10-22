@@ -27,7 +27,12 @@ where T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static
     publisher: Arc<Mutex<publisher::Publisher>>,
     _subscriber: Arc<subscriber::Subscriber>,
     requester: Arc<Mutex<req_client::RequestClient>>,
-    _replier: Arc<rep_server::ReplyServer<T>>
+    _replier: Arc<rep_server::ReplyServer<T>>,
+    
+    replier_handle: tokio::task::JoinHandle<()>,
+    subscriber_handle: tokio::task::JoinHandle<()>
+    
+
 }
 
 impl<T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> ZmqMessageBusClient<T>
@@ -61,7 +66,7 @@ impl<T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> ZmqMess
                              message_processor,
                              &message_bus_address_for_router));
         
-        tokio::spawn(
+        let replier_handle = tokio::spawn(
         {
             let rep = Arc::clone(&_replier);
             async move
@@ -70,7 +75,7 @@ impl<T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> ZmqMess
             }
         });        
         
-        tokio::spawn(
+        let subscriber_handle = tokio::spawn(
         {
             let sub = Arc::clone(&_subscriber);
             async move
@@ -82,7 +87,12 @@ impl<T: rep_server::ProcessRequest + Send + std::marker::Sync + 'static> ZmqMess
             }
         });
 
-        ZmqMessageBusClient{publisher, _subscriber, requester, _replier}       
+        ZmqMessageBusClient{publisher, _subscriber, requester, _replier, replier_handle, subscriber_handle}       
+    }
+
+    pub async fn run(self)
+    {
+        tokio::join!(self.replier_handle, self.subscriber_handle);
     }
 }
 
