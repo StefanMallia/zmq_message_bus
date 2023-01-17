@@ -1,6 +1,7 @@
 use zmq_message_bus_client::ZmqMessageBusClient;
 use zmq_message_bus_client::MessageBusClient;
 use zmq_message_bus_client::ProcessRequest;
+use async_trait::async_trait;
 
 pub struct MessageProcessor {}
 
@@ -13,12 +14,19 @@ impl ProcessRequest for MessageProcessor
     }
 }
 
+// #[async_trait]
+// pub trait ProcessPublisherMessage
+// {
+//     async fn process_message(&self, message: &str);
+// }
 
 struct PublishedMessageProcessor
 {}
+
+#[async_trait]
 impl zmq_message_bus_client::ProcessPublisherMessage for PublishedMessageProcessor
 {
-    fn process_message(&self, input: &str)
+    async fn process_message(&self, input: &str)
     {
         println!("{}", input);
     }
