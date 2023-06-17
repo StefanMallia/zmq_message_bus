@@ -2,6 +2,7 @@
 pub async fn main()
 {
     let config_loader: config_loader::ConfigLoader = config_loader::ConfigLoader::new("appconfig.toml");
+    rust_log::setup_logger(None).unwrap();
     let message_bus_address_for_pubs = config_loader.get_string("message_bus_address_for_publishers").unwrap();
     let message_bus_address_for_subs = config_loader.get_string("message_bus_address_for_subscribers").unwrap();
     let message_bus_req_rep_router = config_loader.get_string("message_bus_address_for_router").unwrap();
