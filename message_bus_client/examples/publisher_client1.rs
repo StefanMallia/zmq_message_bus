@@ -42,15 +42,11 @@ pub fn main()
 fn send_message_loop(message_bus_client: &ZmqMessageBusClient)
 {
     let mut increment = 0;
-        increment = increment + 1;
+    loop
+    {
         let message = format!("Message from client1 {}", increment);
-
         message_bus_client.publish("client1".to_string(), message);
-
         std::thread::sleep(std::time::Duration::from_secs(1));
-
-        message_bus_client.publish("client1".to_string(), "test2".to_string());
-        std::thread::sleep(std::time::Duration::from_secs(5));
-        
-        message_bus_client.publish("client1".to_string(), "test".to_string());
+        increment = increment + 1;
+    }
 }

@@ -86,6 +86,12 @@ impl ZmqMessageBusClient
 
         ZmqMessageBusClient{publisher, requester, _replier_handle, _subscriber_handle}       
     }
+
+    pub fn run(self)
+    {
+        self._replier_handle.join().unwrap();
+        self._subscriber_handle.join().unwrap();
+    }
 }
 
 impl MessageBusClient for ZmqMessageBusClient

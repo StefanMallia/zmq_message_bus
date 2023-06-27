@@ -31,8 +31,7 @@ pub fn main()
     let message_bus_client_1 = ZmqMessageBusClient::connect(&configurations,
                                                             MessageProcessor{},
                                                             PublishedMessageProcessor{}
-                                                           );
-    
+                                                           );    
     send_message_loop(&message_bus_client_1); 
 }
 

@@ -27,10 +27,10 @@ impl zmq_message_bus_client::ProcessPublisherMessage for PublishedMessageProcess
 pub fn main()
 {
     let configurations = config_loader::ConfigLoader::new("examples/appconfig_client2.toml");
-    let _message_bus_client_2 = ZmqMessageBusClient::connect(&configurations,
+    let message_bus_client_2 = ZmqMessageBusClient::connect(&configurations,
                                                             MessageProcessor{},
                                                             PublishedMessageProcessor{}
                                                            );
-    
+    message_bus_client_2.run();   
 }
 
