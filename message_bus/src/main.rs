@@ -1,5 +1,7 @@
-#[tokio::main]
-pub async fn main()
+use std::thread;
+
+
+pub fn main()
 {
     let config_loader: config_loader::ConfigLoader = config_loader::ConfigLoader::new("appconfig.toml");
     rust_log::setup_logger(None).unwrap();
@@ -11,21 +13,21 @@ pub async fn main()
     let subscriber = subscriber::Subscriber::new(vec![""], message_bus_address_for_pubs.as_str(), true);
 
     let message_bus = 
-        tokio::spawn(async move
+        thread::spawn(move ||
         {
             loop
             {
-              let message = subscriber.receive_raw().await;
+              let message = subscriber.receive_raw();
               publisher.send_string("", &message.as_str());
             }
         });
     let message_router = zmq_message_router::MessageRouter::new(&message_bus_req_rep_router);
     let req_rep_router = 
-        tokio::spawn(async move
+        thread::spawn(move ||
         {
-            message_router.route_messages().await;
+            message_router.route_messages();
         });
 
-    message_bus.await.unwrap();
-    req_rep_router.await.unwrap();
+    message_bus.join().unwrap();
+    req_rep_router.join().unwrap();
 }

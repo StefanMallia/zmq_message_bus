@@ -1,6 +1,6 @@
 [package]
 name = "zmq_message_bus"
-version = "0.1.2"
+version = "0.2.0"
 authors = ["StefanMallia <5004438+StefanMallia@users.noreply.github.com>"]
 edition = "2018"
 
@@ -8,10 +8,9 @@ edition = "2018"
 
 [dependencies]
 zmq = "0.9"
-tokio = { version = "1", features = ["full"] }
 chrono = "0.4.19"
 config_loader = {version = "0.1.3", git="https://github.com/StefanMallia/config_loader", branch="main"}
-publisher = {version = "0.2.1", git="https://github.com/StefanMallia/zmq_pub_sub", branch="main"}
-subscriber = {version = "0.1.1", git="https://github.com/StefanMallia/zmq_pub_sub", branch="main"}
-zmq_message_router = {version = "0.1.1", git="https://github.com/StefanMallia/zmq_req_rep_router", branch="main"}
+publisher = {version = "0.3.0", git="https://github.com/StefanMallia/zmq_pub_sub", branch="main"}
+subscriber = {version = "0.2.0", git="https://github.com/StefanMallia/zmq_pub_sub", branch="main"}
+zmq_message_router = {version = "0.2.0", git="https://github.com/StefanMallia/zmq_req_rep_router", branch="main"}
 rust_log = {version = "0.3.1", git="https://github.com/StefanMallia/rust_log", branch="main"}
