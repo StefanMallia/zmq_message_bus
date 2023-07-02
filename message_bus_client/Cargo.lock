@@ -266,8 +266,8 @@ dependencies = [
 
 [[package]]
 name = "publisher"
-version = "0.3.1"
-source = "git+https://github.com/StefanMallia/zmq_pub_sub?branch=main#419ddfa185903e187ecb0f3865de2e532f635e6e"
+version = "0.3.2"
+source = "git+https://github.com/StefanMallia/zmq_pub_sub?branch=main#b1a237994e4e370f899b550372d81c1a71f2e091"
 dependencies = [
  "rust_log",
  "serde 1.0.164",
@@ -398,8 +398,8 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "subscriber"
-version = "0.2.2"
-source = "git+https://github.com/StefanMallia/zmq_pub_sub?branch=main#419ddfa185903e187ecb0f3865de2e532f635e6e"
+version = "0.2.3"
+source = "git+https://github.com/StefanMallia/zmq_pub_sub?branch=main#b1a237994e4e370f899b550372d81c1a71f2e091"
 dependencies = [
  "rust_log",
  "serde 1.0.164",
