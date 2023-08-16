@@ -1,6 +1,6 @@
 [package]
 name = "zmq_message_bus_client"
-version = "0.4.2"
+version = "0.5.0"
 authors = ["StefanMallia <5004438+StefanMallia@users.noreply.github.com>"]
 edition = "2018"
 

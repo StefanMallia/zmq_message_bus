@@ -1,4 +1,3 @@
-[zmq_message_bus]
 identity="client2"
 subscription_channels = ["client1"]
 address_for_pubs="tcp://127.0.0.1:13031"
